@@ -4,10 +4,11 @@
 
 ### Design specification and prototype study
 
-**Alder Systems - fictional internal service catalog**  
-**Prepared:** September 15, 2026  
-**Continues:** the September 7, 2026 business case  
-**Specification:** version 0.2
+**Alder Systems - fictional internal service catalog**
+
+**Prepared:** September 15, 2026. **Specification:** version 0.2.
+
+**Continues:** the September 7, 2026 business case.
 
 Signpost gives engineers a reliable starting point for three questions: what does this service do, who owns it, and where are its operational guides? The proposed first version is a read-only catalog with search, team and tier filters, service details, and personal pins. This study retains the business case's small scope and the existing web-app starter.
 
@@ -151,7 +152,7 @@ The revised specification is stored at **docs/design/specification.md** and foll
 
 **Required public link:** [Signpost specification](https://ryroiu.github.io/business_case/docs/design/specification.md).
 
-**Publication status, September 15, 2026:** the URL returned HTTP 200, but it still displayed the original “Your App Idea Name” template when checked. Version 0.2 is complete locally and has not been published. The revised specification and new report links must be published before this PDF can be treated as a submission with a verified current public specification.
+**Publication verified, September 15, 2026:** the required URL was opened in a browser and displayed “Specification: Signpost” with version 0.2. The [live prototype](https://ryroiu.github.io/business_case/) was also checked for service browsing, search, detail navigation, refresh of a direct service link, and access to the fictional sample runbook. GitHub Pages reported a successful publication.
 
 | Specification area | Revision after research and evaluation |
 | --- | --- |
@@ -162,7 +163,7 @@ The revised specification is stored at **docs/design/specification.md** and foll
 | Success criteria | Separate browser-verifiable behavior from human comprehension and timed-task targets. |
 | Assumptions | Separate the fictional public demo from a real catalog behind protected hosting. |
 
-**Ready now:** revised specification, initial draft, research notes, simulated interview and participant material, working prototype, screenshots, and PDF export. **Before submission:** publish the revision, reopen the public link to verify version 0.2, and confirm that simulated research is permitted by the course; if it is not, replace it with real observations and revise the report.
+**Deliverables:** published specification and prototype, initial draft, research notes, clearly labeled simulated interviews and observations, browser-check record, prototype images, and this PDF. The package presents a fictional case study; the simulation is not evidence that actual people were interviewed or observed.
 
 ### Sources and supporting files
 

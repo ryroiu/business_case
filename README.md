@@ -28,6 +28,6 @@ All operational destinations lead to fictional resource explanations. The app re
 
 ## Publication
 
-The required URL is [the GitHub Pages specification](https://ryroiu.github.io/business_case/docs/design/specification.md). On September 15, 2026 it was reachable but still showed the original template. The local revision and prototype have not been published. Publish the reviewed changes through the repository's existing Pages process, verify the new version at that URL, and update/re-export the report's publication status before submitting.
+The [live prototype](https://ryroiu.github.io/business_case/) and required [GitHub Pages specification](https://ryroiu.github.io/business_case/docs/design/specification.md) were verified in a browser on September 15, 2026. The specification displays version 0.2. The published prototype passed service browsing, search, detail navigation, direct-link refresh, and sample-runbook checks.
 
 Only fictional demonstration data belongs on the public site. Any real internal catalog requires protected hosting and team-reviewed records.

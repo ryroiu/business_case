@@ -25,3 +25,7 @@ Run: September 15, 2026. Headless local Chrome, 1440 × 1050 and 390 × 844 view
 - PASS: Observed 70-record response 12 ms; local synthetic fixture, not a user test
 - PASS: 70-service filter response under 200 ms after load
 - PASS: No uncaught browser page errors
+
+## Published-site verification
+
+On September 15, 2026, GitHub Pages reported the prototype publication as built. A browser check at https://ryroiu.github.io/business_case/ verified eight service records, search, detail navigation, direct service-link refresh, and the fictional sample runbook with no uncaught page errors. The required specification URL displayed “Specification: Signpost” and version 0.2.
