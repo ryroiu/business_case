@@ -1,20 +1,4 @@
 export default {
-  name: 'navbar-component',
-  template: /* html */ `
-    <nav class="navbar sticky-top bg-white border-bottom px-3">
-      <span class="navbar-brand mb-0 h1"><i class="bi bi-bootstrap-fill me-2"></i>Web App Starter</span>
-
-      <div class="ms-auto d-flex gap-2">
-        <router-link class="btn btn-outline-primary btn-sm" to="/">
-          <i class="bi bi-house me-1"></i>Home
-        </router-link>
-        <router-link class="btn btn-outline-primary btn-sm d-flex align-items-center" to="/items">
-          <i class="bi bi-card-list me-1"></i>Items
-        </router-link>
-        <router-link class="btn btn-outline-primary btn-sm" to="/about">
-          <i class="bi bi-info-circle me-1"></i>About
-        </router-link>
-      </div>
-    </nav>
-  `,
+  setup() { return { route: VueRouter.useRoute() }; },
+  template: `<header class="site-header"><div class="container nav-inner"><router-link to="/" class="brand" aria-label="Signpost home"><span class="brand-icon" aria-hidden="true">↗</span>signpost<span class="brand-divider">/</span><span class="brand-caption">Service catalog</span></router-link><nav aria-label="Main navigation"><router-link to="/" exact-active-class="active">Home</router-link><router-link to="/items" :class="{ active: route.path.startsWith('/items') }">Services</router-link><router-link to="/about" active-class="active">About</router-link></nav></div></header>`,
 };

@@ -1,18 +1,4 @@
 export default {
-  name: 'landing-page-component',
-  template: /* html */ `
-    <div class="container py-4">
-      <h1 class="mb-3">Welcome!</h1>
-      <p class="lead">This is a web app template in need of customization and improved interaction design.</p>
-      <router-link to="/items" class="btn btn-primary mb-4"><i class="bi bi-list-check me-1"></i>View the Example Collection</router-link>
-
-      <h2 class="h4 mt-3">Template App Description</h2>
-      <p>
-        This is a simple Vue.js starter template that demonstrates how to build a small web app with a landing page, a collection page, and an item detail page. It uses Vue's Composition API for state management and Vue Router for navigation. The app loads a dataset from a CSV file and allows users to bookmark items for easy access later.
-      </p>
-      <p>
-        Your goal is to customize the app by adapting it to a different dataset, improving the user interface and interaction design, and adding new features that enhance the user experience. You can use any public dataset that interests you, such as movies, books, recipes, or anything else you find compelling. The app is intentionally simple to give you a lot of freedom in how you choose to enhance it.
-      </p>
-    </div>
-  `,
+  setup() { const store = Vue.inject('itemsStore'); return { store, pinned: Vue.computed(() => store.items.filter(item => store.isPinned(item.id))) }; },
+  template: `<section class="container page-space"><div class="home-intro"><p class="eyebrow">ALDER SYSTEMS / ENGINEERING</p><h1 tabindex="-1">Find the service.<br>Know who owns it.</h1><p class="intro-copy">Owners, runbooks, and on-call schedules.<br>Your starting point for the services we run.</p><router-link to="/items" class="btn btn-primary">Browse services <span aria-hidden="true">→</span></router-link></div><div class="section-heading"><div><p class="eyebrow">YOUR SHORTCUTS</p><h2>Pinned services</h2></div><span class="muted">Saved in this browser</span></div><catalog-status></catalog-status><template v-if="!store.isLoading && !store.error"><div v-if="!pinned.length" class="empty-state"><div class="empty-symbol" aria-hidden="true">☆</div><h3 class="h5">Keep your regular services close</h3><p>Pin a service in the catalog and it will appear here.</p><router-link to="/items" class="service-link">Find a service to pin →</router-link></div><div v-else class="service-grid"><service-card v-for="item in pinned" :key="item.id" :item="item"></service-card></div></template></section>`,
 };

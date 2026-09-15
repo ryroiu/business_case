@@ -1,57 +1,9 @@
 export default {
-  name: 'item-detail-page-component',
   setup() {
-    const itemsStore = Vue.inject('itemsStore');
-    const route = VueRouter.useRoute();
-
-    const selectedItem = Vue.computed(() => {
-      return itemsStore.items.find((item) => item.id === route.params.id);
-    });
-
-    return {
-      itemsStore,
-      selectedItem,
-    };
+    const store = Vue.inject('itemsStore'); const route = VueRouter.useRoute();
+    const selectedItem = Vue.computed(() => store.items.find(item => item.id === route.params.id));
+    Vue.watch(selectedItem, item => { if (item) document.title = `${item.name} · Signpost`; }, { immediate: true });
+    return { store, selectedItem };
   },
-  template: /* html */ `
-    <section class="container py-4">
-      <router-link to="/items" class="btn btn-link ps-0 mb-3">← Back to collection</router-link>
-
-      <div v-if="itemsStore.isLoading" class="alert alert-secondary" role="status">
-        Loading item details...
-      </div>
-
-      <div v-else-if="itemsStore.error" class="alert alert-danger" role="alert">
-        {{ itemsStore.error }}
-      </div>
-
-      <div v-else-if="!selectedItem" class="alert alert-warning" role="alert">
-        Item not found.
-      </div>
-
-      <article v-else class="card shadow-sm border-0 overflow-hidden">
-        <img
-          v-if="selectedItem.imageUrl"
-          :src="selectedItem.imageUrl"
-          :alt="selectedItem.name"
-          class="item-detail-image w-100 object-fit-cover" />
-        <div
-          v-else
-          class="item-detail-image w-100 d-flex align-items-center justify-content-center bg-light text-muted">
-          No image available
-        </div>
-
-        <div class="card-body p-4">
-          <div class="d-flex align-items-center gap-2 mb-2">
-            <h1 class="h3 mb-0">{{ selectedItem.name }}</h1>
-            <span class="badge text-bg-primary">{{ selectedItem.category || 'General' }}</span>
-          </div>
-
-          <p class="lead mb-3">{{ selectedItem.description || 'No description available.' }}</p>
-          <p class="mb-0"><strong>Location:</strong> {{ selectedItem.location || 'N/A' }}</p>
-          <p class="text-muted mt-2 mb-0"><strong>Item ID:</strong> {{ selectedItem.id }}</p>
-        </div>
-      </article>
-    </section>
-  `,
+  template: `<section class="container page-space"><router-link to="/items" class="back-link">← Back to services</router-link><catalog-status></catalog-status><div v-if="!store.isLoading && !store.error && !selectedItem" class="empty-state"><h1 tabindex="-1">Service not found</h1><p>This service may have been renamed or removed. Browse the catalog to find its current entry.</p></div><article v-if="!store.isLoading && !store.error && selectedItem" class="detail-layout"><div><p class="eyebrow">SERVICE / {{ selectedItem.id }}</p><div class="detail-title"><h1 tabindex="-1">{{ selectedItem.name }}</h1><button class="btn btn-outline-primary" :aria-pressed="store.isPinned(selectedItem.id)" @click="store.togglePin(selectedItem)">{{ store.isPinned(selectedItem.id) ? '★ Unpin service' : '☆ Pin service' }}</button></div><span class="tier" :class="'tier-' + selectedItem.category.slice(-1)">{{ store.tierLabel(selectedItem.category) }}</span><p class="detail-description">{{ selectedItem.description }}</p><img v-if="selectedItem.imageUrl" :src="selectedItem.imageUrl" :alt="selectedItem.name + ' architecture'" @error="selectedItem.imageUrl = ''" class="architecture-image" /><div class="detail-panel"><h2 class="h5">Ownership &amp; review</h2><dl><div><dt>Owning team</dt><dd>{{ selectedItem.location }}</dd></div><div><dt>Last reviewed</dt><dd>{{ selectedItem.lastReviewed || 'Not provided' }}</dd></div></dl><p class="review" :class="{ 'review-warning': store.review(selectedItem).warning }">{{ store.review(selectedItem).text }}</p><p class="small muted mb-0">{{ store.review(selectedItem).warning ? 'Confirm this information with the owning team before relying on it.' : 'The review date records the team’s last check of this entry.' }}</p></div><p class="small muted mt-4">Service tier describes business impact. It does not show live health or confirm that a change is safe.</p></div><aside class="detail-panel resources"><p class="eyebrow">WHERE TO GO</p><h2 class="h4">Operational links</h2><a v-if="selectedItem.runbookUrl" :href="selectedItem.runbookUrl" class="resource-link"><span>Runbook<small>Steps and context for responding</small></span><span aria-hidden="true">↗</span></a><p v-else class="missing-link">Runbook not provided</p><a v-if="selectedItem.onCallUrl" :href="selectedItem.onCallUrl" class="resource-link"><span>On-call schedule<small>Check the current rotation</small></span><span aria-hidden="true">↗</span></a><p v-else class="missing-link">On-call schedule not provided</p><a v-if="selectedItem.repositoryUrl" :href="selectedItem.repositoryUrl" class="resource-link"><span>Repository<small>Source code and change history</small></span><span aria-hidden="true">↗</span></a><p v-else class="missing-link">Repository not provided</p><p class="small muted mt-4">Missing or outdated information? Contact the owning team. During an incident, use your established escalation process.</p></aside></article></section>`,
 };
