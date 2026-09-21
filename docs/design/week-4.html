@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Signpost · Week 4 planning documents</title>
+<meta name="description" content="Read Signpost's implementation plan, task list, and reflection draft.">
+<style>
+:root{color-scheme:light;--ink:#182b41;--muted:#536477;--blue:#234fc6;--line:#d8e0e9}*{box-sizing:border-box}html{scroll-padding-top:20px}body{margin:0;background:#f6f8fb;color:var(--ink);font:16px/1.65 system-ui,-apple-system,sans-serif}main{max-width:1180px;margin:auto;padding:40px 28px}a{color:var(--blue);text-underline-offset:3px}a:focus-visible,.table-wrap:focus-visible{outline:3px solid var(--blue);outline-offset:4px}header{padding:10px 0 25px}.eyebrow{font-size:12px;font-weight:750;letter-spacing:2px;color:var(--muted)}h1{font-size:clamp(32px,5vw,48px);line-height:1.15;letter-spacing:-1px;margin:12px 0 20px}h2{font-size:30px;line-height:1.25}h3{font-size:23px;margin-top:32px}h4{font-size:18px}.intro{max-width:760px;color:var(--muted)}nav{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0 0}nav a{padding:9px 18px;border:1px solid var(--line);border-radius:8px;background:white;min-height:44px;text-decoration:none;font-weight:650}article{background:white;border:1px solid var(--line);border-radius:14px;padding:30px;margin:24px 0}article:target{border-color:var(--blue)}p,li{max-width:95ch}li{margin:6px 0}.source-link{font-size:13px;color:var(--muted)}.table-wrap{overflow:auto;margin:20px 0;border:1px solid var(--line);border-radius:8px}table{border-collapse:collapse;min-width:650px;width:100%;font-size:14px;line-height:1.5}th,td{text-align:left;vertical-align:top;padding:13px 14px;border-bottom:1px solid var(--line)}th{background:#edf2fc;font-size:13px;font-weight:750}tr:last-child td{border-bottom:none}tr:nth-child(even) td{background:#fafbfd}code{font:0.9em ui-monospace,monospace;overflow-wrap:anywhere;background:#f1f4f8;padding:2px 4px;border-radius:4px}blockquote{border-left:3px solid var(--blue);margin-left:0;padding-left:18px;color:var(--muted)}footer{padding:12px 0 40px;color:var(--muted);font-size:13px}.skip{position:absolute;left:12px;top:-100px;background:white;padding:12px}.skip:focus{top:10px}@media(max-width:600px){main{padding:24px 16px}article{padding:20px 16px}h2{font-size:25px}nav{gap:8px}nav a{padding:9px 12px}}
+</style></head><body><a class="skip" href="#documents">Skip to documents</a><main><header><p class="eyebrow">SIGNPOST / WEEK 4</p><h1>From specification<br>to a practical plan.</h1><p class="intro">The implementation plan, proposed acceptance tasks, and reflection draft for the fictional Alder Systems service catalog. Prepared September 21, 2026; author review and plan approval remain pending.</p><nav aria-label="Document navigation"><a href="#plan">Plan</a><a href="#tasks">Tasks</a><a href="#reflection">Reflection draft</a><a href="../../">Open prototype</a></nav></header><div id="documents">
+<article id="plan"><p class="source-link"><a href="plan.md">Download original Markdown</a> · <a href="https://github.com/ryroiu/business_case/blob/main/docs/design/plan.md">View source on GitHub</a></p><h2 id="plan-plan-signpost">Plan — Signpost</h2>
+<p><strong>Version:</strong> 0.2 — September 21, 2026. Revised after specification, repository, and course-guide review; prepared for Ryan's approval.</p>
+<p><strong>Basis:</strong> <a href="specification.md">Specification v0.2</a>, <a href="business-case.md">business case</a>, and the <a href="reference/plan-guide.md">course plan guide</a>. Requirement IDs below refer to the specification. This is the Week 4 planning assignment for the fictional Alder Systems case.</p>
+<p><strong>Companion documents:</strong> <a href="#tasks">Tasks</a> · <a href="planning-review.md">Evaluation and revision record</a> · <a href="#reflection">Reflection draft</a>. Archived first drafts are retained in the prompt scratch pad.</p>
+<h3 id="plan-1-approach-summary">1. Approach Summary</h3>
+<p>We will refine the existing service catalog so engineers can find a service, identify its owner, and open its supporting information. We will keep the current pages and shared service file, with personal pins saved in each visitor's browser. We will check incomplete records and recovery paths before polishing the normal browsing flow. The public demonstration will continue to use fictional data; a real internal release would require protected hosting and owner-reviewed records. (FR-01–FR-12; NFR-05.)</p>
+<h3 id="plan-15-tech-stack">1.5 Tech Stack</h3>
+<ul>
+<li><strong>Frontend:</strong> Existing no-build Vue 3, Vue Router 4, Bootstrap 5.3.3, Bootstrap Icons 1.10.5, JavaScript, HTML, and CSS. (FR-01, FR-04–FR-07; NFR-01–NFR-02; specification scope.)</li>
+<li><strong>Backend/DB:</strong> None. Papa Parse 5.4.1 reads <code>items-template.csv</code>; browser localStorage holds personal pin IDs. (FR-03, FR-08–FR-09, FR-12.)</li>
+<li><strong>Hosting:</strong> Existing GitHub Pages site for the fictional demonstration; a local static server for preview. Protected internal hosting is a separate condition for any real deployment. (NFR-05.)</li>
+<li><strong>Other services/APIs:</strong> Existing jsDelivr and unpkg library delivery. No operational, authentication, database, or AI API is needed for this prototype. (FR-11–FR-12; specification scope.)</li>
+</ul>
+<h3 id="plan-2-key-decisions-adrs">2. Key Decisions (ADRs)</h3>
+<p>An Architecture Decision Record (ADR) explains a meaningful choice and its tradeoff.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable document table"><table>
+<thead>
+<tr>
+<th>ADR #</th>
+<th>Decision</th>
+<th>Traces to (R#)</th>
+<th>Alternatives considered</th>
+<th>Why this one</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADR-00</td>
+<td>Retain the current no-build Vue application and four hash routes.</td>
+<td>FR-01; NFR-03</td>
+<td>Rebuild with React or a Vue build pipeline; server-managed routes</td>
+<td>Preserves the working template and direct links on static hosting; accepts the current external-library dependency.</td>
+</tr>
+<tr>
+<td>ADR-01</td>
+<td>Retain the ten-column CSV, validate the complete file, and reject an invalid load.</td>
+<td>FR-03; Key Data</td>
+<td>Introduce a database; display only valid rows</td>
+<td>A reviewed file fits a small read-only catalog. Rejecting a faulty file prevents an incomplete catalog from appearing authoritative, at the cost of availability until corrected.</td>
+</tr>
+<tr>
+<td>ADR-02</td>
+<td>Use one shared in-memory store for loaded records and current filters.</td>
+<td>FR-03, FR-05–FR-06</td>
+<td>Fetch in each screen; save filters permanently</td>
+<td>Loads once initially and preserves browsing context between screens without another state library. Filters reset after refresh, as allowed by the specification.</td>
+</tr>
+<tr>
+<td>ADR-03</td>
+<td>Save only service IDs in <code>signpost:pins:v1</code>, with session-only fallback.</td>
+<td>FR-02, FR-08–FR-09</td>
+<td>User accounts and synchronized favorites; session-only pins for everyone</td>
+<td>Supports return visits without storing duplicate service records or adding login. Pins remain specific to the browser and origin.</td>
+</tr>
+<tr>
+<td>ADR-04</td>
+<td>Show review age and missing information explicitly.</td>
+<td>FR-07, FR-10; SC-05, SC-07</td>
+<td>Hide old entries; infer that recent records are healthy</td>
+<td>Keeps potentially useful ownership information available while making uncertainty visible. The 90-day threshold is a proposed policy, not a health measurement.</td>
+</tr>
+<tr>
+<td>ADR-05</td>
+<td>Allow HTTPS external destinations and only the specified local sample-link pattern; render CSV text as text.</td>
+<td>FR-07, FR-11; NFR-04</td>
+<td>Allow arbitrary links and HTML; integrate a live incident tool</td>
+<td>Restricts unsafe content and keeps the demonstration understandable. Links lead to information and never establish that a responder is available.</td>
+</tr>
+<tr>
+<td>ADR-06</td>
+<td>Retain Bootstrap and the existing responsive style, with optional images omitted when absent or broken.</td>
+<td>FR-04; NFR-01–NFR-02</td>
+<td>Adopt a new design system; require images for every card</td>
+<td>Preserves the established layout and prioritizes ownership and actions. Accessibility still requires explicit checks.</td>
+</tr>
+<tr>
+<td>ADR-07</td>
+<td>Maintain shared records through repository review; document the steward's role in About.</td>
+<td>FR-11–FR-12</td>
+<td>Add an editing form and role management</td>
+<td>Fits the read-only scope. Approval and publishing are organizational responsibilities; the prototype does not enforce them.</td>
+</tr>
+<tr>
+<td>ADR-08</td>
+<td>Publish fictional records on the existing Pages site; require protected hosting for real records.</td>
+<td>NFR-05</td>
+<td>Publish real internal data here; add a cosmetic login to the static page</td>
+<td>Prevents confusing a classroom demonstration with an internal deployment. Access protection would have to cover both the page and its CSV.</td>
+</tr>
+<tr>
+<td>ADR-09</td>
+<td>Separate implementation checks from first-time-user evaluation.</td>
+<td>SC-01–SC-07; NFR-01–NFR-03</td>
+<td>Treat simulated observations or one successful walkthrough as acceptance</td>
+<td>Browser evidence can verify behavior; only people can establish lookup time and comprehension. Neither evidence type substitutes for the other.</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="plan-3-components-building-blocks">3. Components / Building Blocks</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable document table"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+<th>Related requirements</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>App shell and navigation</td>
+<td>Provide Home, Services, detail, About, page titles, and unknown-route recovery.</td>
+<td>FR-01; NFR-01</td>
+</tr>
+<tr>
+<td>Service data file and loader</td>
+<td>Supply eight fictional records, validate the full file, and support loading/error/retry states.</td>
+<td>FR-03; NFR-04–NFR-05</td>
+</tr>
+<tr>
+<td>Shared catalog and filter state</td>
+<td>Keep records available across pages and preserve search, team, tier, and pinned-only selections.</td>
+<td>FR-03, FR-05–FR-06</td>
+</tr>
+<tr>
+<td>Home</td>
+<td>Introduce the catalog and display personal pins or a helpful empty state.</td>
+<td>FR-02, FR-08</td>
+</tr>
+<tr>
+<td>Services and reusable service cards</td>
+<td>Show alphabetical records, combined filters, result count, review status, and empty/no-results states.</td>
+<td>FR-04–FR-06, FR-10</td>
+</tr>
+<tr>
+<td>Service detail</td>
+<td>Display ownership, purpose, review date, operational destinations, and unknown-ID recovery.</td>
+<td>FR-07, FR-10</td>
+</tr>
+<tr>
+<td>Pin storage and fallback notice</td>
+<td>Keep personal shortcuts across normal visits or explain session-only storage.</td>
+<td>FR-08–FR-09</td>
+</tr>
+<tr>
+<td>About and sample resources</td>
+<td>Explain tiers, pins, fictional data, corrections, and sample operational destinations.</td>
+<td>FR-11–FR-12</td>
+</tr>
+<tr>
+<td>Shared visual and interaction style</td>
+<td>Provide readable content, responsive layout, visible focus, labels, and usable controls.</td>
+<td>NFR-01–NFR-02</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="plan-4-dependencies-assumptions">4. Dependencies &amp; Assumptions</h3>
+<p><strong>External services/tools needed</strong></p>
+<ul>
+<li>GitHub repository access and the existing Pages publishing configuration. The site currently publishes the root of <code>main</code>. A static preview server is needed for local CSV loading. (FR-03; NFR-05; ADR-08.)</li>
+<li>Browser access to the existing Vue, router, Bootstrap, icons, and Papa Parse libraries. Vue and Vue Router currently use major-version CDN URLs; this is a reproducibility risk to assess before a real release. (NFR-03; ADR-00.)</li>
+<li>A modern browser with JavaScript. Persistent storage may be unavailable, so storage access is optional rather than a condition for browsing. (FR-08–FR-09.)</li>
+<li>For human evaluation, two available first-time testers and Ryan's review of their observations. For an operational rollout, a designated steward, owning teams, and a hosting owner would also be required. These roles have not been staffed for the fictional case. (FR-12; NFR-05; SC-02, SC-07.)</li>
+</ul>
+<p><strong>Assumptions being made</strong></p>
+<ul>
+<li>The specification v0.2 defines the current scope. It refines earlier business-case language: the catalog provides schedule links, not a current responder or a judgment that a change is safe; it requires a ten-column schema and protected hosting for real records. (FR-07, FR-10–FR-12; NFR-05.)</li>
+<li>The classroom dataset contains eight services across five teams. A roughly 70-service, nine-team internal catalog is a future case assumption. No production data collection is part of this assignment. (Key Data; NFR-03, NFR-05.)</li>
+<li><strong>Unverified:</strong> the 30-second lookup target and users' understanding of schedules/review warnings. Prior simulated interviews do not establish either result. (SC-02, SC-07.)</li>
+<li><strong>Unverified:</strong> normal-broadband initial display within three seconds. The earlier local 70-record filter measurement is useful evidence only for that test environment. (NFR-03.)</li>
+<li><strong>Unverified for real rollout:</strong> owner availability, acceptance of the 90-day policy, protected hosting, and the business case's costs and savings. The original ten-week, 270-hour scenario is not an estimate of remaining classroom work. (FR-10, FR-12; NFR-05; business-case feasibility.)</li>
+</ul>
+<h3 id="plan-5-risks">5. Risks</h3>
+<p>Likelihood and impact are qualitative planning judgments for this case. Ryan is the classroom owner; organizational roles below are proposed roles for a future internal release.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable document table"><table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Likelihood</th>
+<th>Impact</th>
+<th>Mitigation</th>
+<th>Owner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Records become stale or incomplete. (FR-07, FR-10, FR-12)</td>
+<td>High</td>
+<td>High</td>
+<td>Show warnings and missing-link text; document owner review and quarterly attestation. Require complete, owner-attested Tier 1 records before an operational release.</td>
+<td>Ryan for demo; proposed catalog steward and owning teams for rollout</td>
+</tr>
+<tr>
+<td>A malformed CSV makes the catalog unavailable. (FR-03)</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Validate before publication; test full-file rejection and Retry; restore the previous valid file if needed.</td>
+<td>Ryan</td>
+</tr>
+<tr>
+<td>Public artifacts accidentally contain real internal information. (NFR-05)</td>
+<td>Low</td>
+<td>High</td>
+<td>Review changed records and destinations before publication; use fictional sample resources. Protect app and CSV before introducing real data elsewhere.</td>
+<td>Ryan; proposed hosting owner for rollout</td>
+</tr>
+<tr>
+<td>A CDN failure or changing library version prevents startup. (NFR-03)</td>
+<td>Medium</td>
+<td>High</td>
+<td>Record dependencies, measure a fresh load, and retain a known working revision. Assess fixed versions or internal copies before operational use.</td>
+<td>Ryan; proposed hosting owner for rollout</td>
+</tr>
+<tr>
+<td>Browser storage is blocked or damaged. (FR-09)</td>
+<td>Medium</td>
+<td>Low</td>
+<td>Keep in-memory pins, show the session-only notice, and test malformed stored values.</td>
+<td>Ryan</td>
+</tr>
+<tr>
+<td>Users mistake schedule links or recent review dates for live incident information. (FR-10–FR-11; SC-07)</td>
+<td>Medium</td>
+<td>High</td>
+<td>Keep explicit labels and escalation guidance; ask two testers to explain what the links and warnings mean.</td>
+<td>Ryan</td>
+</tr>
+<tr>
+<td>The plan duplicates finished work or declares unreviewed work complete. (SC-01–SC-07; ADR-09)</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Inventory the existing prototype, write acceptance/refinement tasks, and require passing evidence plus human review before marking a task Done.</td>
+<td>Ryan</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="plan-6-sequencing">6. Sequencing</h3>
+<p>The next phase starts from the existing prototype. This assignment produces and evaluates planning documents; it does not launch the implementation backlog.</p>
+<h4 id="plan-starting-point-what-already-exists">Starting point: what already exists</h4>
+<p>The baseline is repository revision <code>0b99db2</code> and the <a href="browser-checks.md">September 15 browser report</a>. A September 21 source review confirmed the following implementation is present. Historical test results retain their original date; they are not new human acceptance evidence.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable document table"><table>
+<thead>
+<tr>
+<th>Existing work</th>
+<th>Evidence / location</th>
+<th>Implication for the next phase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CSV loader, validation, link/date rules, shared filters, and pins</td>
+<td><code>app.js</code>, <code>items-template.csv</code>; FR-03, FR-05–FR-10</td>
+<td>Check boundary cases and correct failures; do not create another data layer.</td>
+</tr>
+<tr>
+<td>Home, catalog/cards, detail, About/sample resources, navigation</td>
+<td>Existing <code>components/</code> files; FR-01–FR-02, FR-04–FR-08, FR-11–FR-12</td>
+<td>Retain these screens and their list-to-detail flow.</td>
+</tr>
+<tr>
+<td>Responsive styling, focus helpers, labels, and status messages</td>
+<td><code>index.html</code>, <code>style.css</code>, components; NFR-01–NFR-02</td>
+<td>Perform focused accessibility acceptance checks; presence in source is not a complete audit.</td>
+</tr>
+<tr>
+<td>Published fictional prototype and earlier implementation checks</td>
+<td>Existing Pages site and browser report; NFR-03, NFR-05; SC-01, SC-03–SC-06</td>
+<td>Recheck only as required by changes or missing evidence; initial-load measurement and real-user outcomes remain open.</td>
+</tr>
+</tbody>
+</table></div>
+<h4 id="plan-order-for-the-next-implementation-phase">Order for the next implementation phase</h4>
+<ol>
+<li><strong>Establish the baseline.</strong> Compare v0.2 with the current files and existing browser report. Identify what is implemented and what still needs evidence before changing code. (FR-01–FR-12; NFR-01–NFR-05; ADR-09.)</li>
+<li><strong>Check data and trust boundaries first.</strong> Verify schema, failure recovery, safe destinations, and review-date rules. Every screen relies on these decisions and incorrect information is the main risk. (FR-03, FR-07, FR-10–FR-11; NFR-04–NFR-05.)</li>
+<li><strong>Refine discovery and detail only where checks fail.</strong> Preserve the existing cards, routes, filters, ownership information, and return path. (FR-01, FR-04–FR-07.)</li>
+<li><strong>Check personal shortcuts and explanations.</strong> Verify normal and blocked storage, Home, and About after the shared data and detail flow are stable. (FR-02, FR-08–FR-09, FR-11–FR-12.)</li>
+<li><strong>Check accessibility, responsive layout, and performance.</strong> Exercise normal and recovery screens, including delayed loads, at the specified widths. Record measured results and remaining issues. (NFR-01–NFR-03; SC-06.)</li>
+<li><strong>Evaluate with two first-time users.</strong> Use the existing research protocol to assess lookup time and comprehension. Apply narrowly scoped fixes or revise the specification if the problem requires a changed requirement. (SC-01–SC-07; ADR-09.)</li>
+<li><strong>Review and publish the next prototype revision.</strong> Verify fictional content, record the human review, deploy through the existing Pages workflow, and confirm the published routes and documents. Real deployment remains a separate decision. (NFR-05; FR-01, FR-11–FR-12.)</li>
+</ol>
+<p>Steps 2–5 can use temporary fictional fixtures without changing the public catalog. Tester scheduling can begin during step 2 so participant availability does not become a last-minute dependency; actual sessions wait until the relevant checks pass. The Week 4 document publication is separate from a later prototype release. (NFR-04–NFR-05; SC-02, SC-07; ADR-09.)</p>
+<h3 id="plan-7-review-approval">7. Review &amp; Approval</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable document table"><table>
+<thead>
+<tr>
+<th>Reviewer</th>
+<th>Date</th>
+<th>Approved?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AI-assisted consistency review</td>
+<td>September 21, 2026</td>
+<td>Draft reviewed and refined; see the review record. This is not human approval.</td>
+</tr>
+<tr>
+<td>Ryan Roberts, project author</td>
+<td>Pending</td>
+<td>Awaiting personal review and approval.</td>
+</tr>
+<tr>
+<td>Instructor, if required by the course</td>
+<td>Pending</td>
+<td>No approval claimed.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Gate:</strong> The course guide calls for accountable human sign-off before tasks. The companion task document is a proposed draft supplied for review as part of this assignment; it is not evidence of sign-off or authorization for an operational release. No human approval is invented.</p>
+<p><strong>Review checklist:</strong> Every ADR and component traces to requirements; every risk names a mitigation and owner; sequencing prioritizes data/trust risks; existing work is distinguished from pending evidence. Accountable human sign-off remains pending.</p>
+</article><article id="tasks"><p class="source-link"><a href="tasks.md">Download original Markdown</a> · <a href="https://github.com/ryroiu/business_case/blob/main/docs/design/tasks.md">View source on GitHub</a></p><h2 id="tasks-tasks-signpost">Tasks — Signpost</h2>
+<p><strong>Version:</strong> 0.2 — September 21, 2026. Revised task draft derived from <a href="#plan">plan.md</a> and <a href="specification.md">specification v0.2</a>, using the <a href="reference/tasks-guide.md">course tasks guide</a>. See the <a href="planning-review.md">evaluation and revision record</a>.</p>
+<p>These tasks continue the existing prototype. Each row is an acceptance or refinement step, not an instruction to rebuild a feature already present. The document is proposed for Ryan's review alongside the plan. Each task is intended to take less than one working day; estimates below are planning estimates, not logged time.</p>
+<p>The <a href="#plan-starting-point-what-already-exists">plan's baseline inventory</a> records implemented work. <strong>Not started</strong> below refers to the proposed next-phase acceptance task, not to the age or completeness of the feature. The September 15 checks remain historical evidence, and the course's human-review rule prevents automatically marking these new tasks Done.</p>
+<h3 id="tasks-task-list">Task List</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable document table"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Task</th>
+<th>Traces to (R# / ADR#)</th>
+<th>Depends on</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T1</td>
+<td>Record the current files, existing features, and remaining acceptance gaps against v0.2.</td>
+<td>ADR-00, ADR-09; FR-01–FR-12; NFR-01–NFR-05</td>
+<td>—</td>
+<td>Not started</td>
+</tr>
+<tr>
+<td>T2</td>
+<td>Verify the ten-column CSV and its eight fictional records before using them as the test baseline.</td>
+<td>FR-03; NFR-05; ADR-01, ADR-08</td>
+<td>T1</td>
+<td>Not started</td>
+</tr>
+<tr>
+<td>T3</td>
+<td>Exercise catalog loading, invalid-file rejection, empty data, and Retry with controlled fixtures.</td>
+<td>FR-03; SC-05; ADR-01</td>
+<td>T2</td>
+<td>Not started</td>
+</tr>
+<tr>
+<td>T4</td>
+<td>Verify safe destinations and inert text using valid and unsafe sample values.</td>
+<td>FR-07, FR-11; NFR-04; ADR-05</td>
+<td>T2</td>
+<td>Not started</td>
+</tr>
+<tr>
+<td>T5</td>
+<td>Check review-date boundaries and warning language against the specification.</td>
+<td>FR-10; SC-05; ADR-04</td>
+<td>T2</td>
+<td>Not started</td>
+</tr>
+<tr>
+<td>T6</td>
+<td>Verify alphabetical service cards and optional-image behavior.</td>
+<td>FR-04; ADR-06</td>
+<td>T3, T4, T5</td>
+<td>Not started</td>
+</tr>
+<tr>
+<td>T7</td>
+<td>Check combined search, team, tier, and pinned-only filtering.</td>
+<td>FR-05; SC-03; ADR-02</td>
+<td>T6</td>
+<td>Not started</td>
+</tr>
+<tr>
+<td>T8</td>
+<td>Check filter preservation and clear/no-results recovery.</td>
+<td>FR-06; SC-03, SC-05; ADR-02</td>
+<td>T7</td>
+<td>Not started</td>
+</tr>
+<tr>
+<td>T9</td>
+<td>Verify detail content, missing destinations, and unknown-service recovery.</td>
+<td>FR-07; SC-01, SC-05; ADR-04, ADR-05</td>
+<td>T3, T4, T5</td>
+<td>Not started</td>
+</tr>
+<tr>
+<td>T10</td>
+<td>Verify all four routes, active navigation, and unknown-route recovery.</td>
+<td>FR-01; SC-01; ADR-00</td>
+<td>T8, T9</td>
+<td>Not started</td>
+</tr>
+<tr>
+<td>T11</td>
+<td>Check pin/unpin behavior and persistence across cards, detail, and Home.</td>
+<td>FR-02, FR-08; SC-04; ADR-03</td>
+<td>T6, T9</td>
+<td>Not started</td>
+</tr>
+<tr>
+<td>T12</td>
+<td>Exercise blocked storage, malformed stored pins, and removed service IDs.</td>
+<td>FR-08–FR-09; SC-04; ADR-03</td>
+<td>T11</td>
+<td>Not started</td>
+</tr>
+<tr>
+<td>T13</td>
+<td>Review About and each sample resource against the catalog's limits and correction process.</td>
+<td>FR-11–FR-12; NFR-05; ADR-07, ADR-08</td>
+<td>T4, T9, T12</td>
+<td>Not started</td>
+</tr>
+<tr>
+<td>T14</td>
+<td>Check keyboard navigation, focus, page titles, labels, and status announcements.</td>
+<td>NFR-01; SC-06; ADR-06</td>
+<td>T10, T12, T13</td>
+<td>Not started</td>
+</tr>
+<tr>
+<td>T15</td>
+<td>Check mobile/desktop layout, control sizes, and text contrast.</td>
+<td>NFR-02; SC-06; ADR-06</td>
+<td>T14</td>
+<td>Not started</td>
+</tr>
+<tr>
+<td>T16</td>
+<td>Measure filtering with 70 fictional records.</td>
+<td>NFR-03; ADR-09</td>
+<td>T7</td>
+<td>Not started</td>
+</tr>
+<tr>
+<td>T17</td>
+<td>Measure a fresh initial load with the normal external dependencies.</td>
+<td>NFR-03; ADR-00, ADR-09</td>
+<td>T10</td>
+<td>Not started</td>
+</tr>
+<tr>
+<td>T18</td>
+<td>Prepare the two-person evaluation sheet and arrange two first-time testers.</td>
+<td>SC-01–SC-07; ADR-09</td>
+<td>T1</td>
+<td>Not started</td>
+</tr>
+<tr>
+<td>T19</td>
+<td>Run the lookup, filtering, pinning, and comprehension tasks with both testers.</td>
+<td>SC-01–SC-07; ADR-09</td>
+<td>T15, T16, T17, T18</td>
+<td>Blocked</td>
+</tr>
+<tr>
+<td>T20</td>
+<td>Review findings and define a small correction task for each unmet requirement.</td>
+<td>ADR-09; affected FR/NFR/SC IDs from findings</td>
+<td>T19</td>
+<td>Not started</td>
+</tr>
+<tr>
+<td>T21</td>
+<td>Publish the reviewed prototype revision and verify the live routes and documentation.</td>
+<td>FR-01, FR-11–FR-12; NFR-05; ADR-08</td>
+<td>T20</td>
+<td>Not started</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Status values:</strong> Not started · In progress · Done · Blocked</p>
+<h4 id="tasks-acceptance-checks-and-working-files">Acceptance checks and working files</h4>
+<p>An existing behavior can pass without a code change. Record the test date, steps, expected and actual result, and a screenshot or other useful evidence. Make a small correction only when a check fails. A material correction becomes its own traced task, followed by the affected check again.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable document table"><table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Files / area</th>
+<th>Pass condition</th>
+<th>Estimated effort</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T1</td>
+<td>Specification, plan, current app, and browser report</td>
+<td>Every FR/NFR has an existing implementation location or an explicit gap; historical checks are labeled with their original date.</td>
+<td>1–2 hours</td>
+</tr>
+<tr>
+<td>T2</td>
+<td><code>items-template.csv</code>, <code>app.js</code></td>
+<td>All ten headers exist; required values and unique IDs are valid; eight services and five teams are recorded; only fictional sample destinations appear.</td>
+<td>1 hour</td>
+</tr>
+<tr>
+<td>T3</td>
+<td><code>app.js</code>, catalog status and consuming pages</td>
+<td>Loading is visible; header-only CSV is empty; missing headers, malformed CSV, duplicate IDs, invalid required values, and network failure show the catalog error without partial records; Retry succeeds after valid data returns. Check one initial fetch and no navigation-triggered refetch.</td>
+<td>2–3 hours</td>
+</tr>
+<tr>
+<td>T4</td>
+<td><code>app.js</code>, cards, detail, About</td>
+<td>HTTPS and the exact permitted sample-link form work; HTTP, <code>javascript:</code>, <code>data:</code>, credentials in URLs, and malformed sample links do not become active destinations. Markup-like CSV text displays literally. Unsafe images are omitted.</td>
+<td>1–2 hours</td>
+</tr>
+<tr>
+<td>T5</td>
+<td><code>app.js</code>, cards and detail</td>
+<td>With a fixed reference date, today and exactly 90 calendar days ago are reviewed; 91 days ago is overdue. Missing, impossible dates such as February 30, and future dates are unverified. Check month/year boundaries and record timezone. Old records remain accessible; labels do not imply service or link health.</td>
+<td>1 hour</td>
+</tr>
+<tr>
+<td>T6</td>
+<td><code>components/service-card-component.js</code>, collection, <code>style.css</code></td>
+<td>Eight cards appear alphabetically with required fields and controls. Blank/broken images leave no empty image area; a valid optional image appears.</td>
+<td>1 hour</td>
+</tr>
+<tr>
+<td>T7</td>
+<td><code>components/collection-page-component.js</code>, shared state</td>
+<td>Search is case-insensitive and requires every word across name, ID, description, and team. Commerce + Tier 1 returns Checkout Web and Payments API. Seed Payments API as a test pin to check pinned-only without depending on T11's pin-control test; selectors come from records and counts update.</td>
+<td>1–2 hours</td>
+</tr>
+<tr>
+<td>T8</td>
+<td>Collection, detail, shared state</td>
+<td>Search, team, tier, and pinned-only survive detail → Back to services. A nonsense query yields helpful recovery; Clear filters resets all four selections.</td>
+<td>1 hour</td>
+</tr>
+<tr>
+<td>T9</td>
+<td><code>components/item-detail-page-component.js</code></td>
+<td>Payments API shows Commerce, purpose, ID, tier, review information, and three resources. Legacy Exporter exposes missing runbook/schedule text and escalation guidance. Unknown IDs show Service not found and a return link. Check optional-image display and broken-image removal in detail as well as on cards.</td>
+<td>1 hour</td>
+</tr>
+<tr>
+<td>T10</td>
+<td><code>app.js</code>, navbar, all pages</td>
+<td>Home, Services, detail, and About work through navigation and direct hash links/refresh. Current navigation is clear; unknown paths recover. Home → Services → detail takes two clicks.</td>
+<td>1 hour</td>
+</tr>
+<tr>
+<td>T11</td>
+<td>Shared state, cards, detail, Home</td>
+<td>Pin Payments API and Billing Worker; both appear on Home and survive a normal refresh. Unpin from either control removes the corresponding shortcut. Only IDs are saved under <code>signpost:pins:v1</code>; empty Home guidance remains useful.</td>
+<td>1 hour</td>
+</tr>
+<tr>
+<td>T12</td>
+<td><code>app.js</code>, storage warning, Home</td>
+<td>Denied reads/writes retain session pins and show the specified warning; malformed JSON and wrong-shaped saved values do not break browsing; removed IDs do not create cards.</td>
+<td>1–2 hours</td>
+</tr>
+<tr>
+<td>T13</td>
+<td><code>components/about-page-component.js</code></td>
+<td>About explains fiction, tiers, browser-only pins, and owner/steward review. All three sample resource types remain clearly fictional and lead back to the selected service; no live responder or paging action is implied.</td>
+<td>1 hour</td>
+</tr>
+<tr>
+<td>T14</td>
+<td><code>index.html</code>, <code>app.js</code>, navigation, filters, cards, detail</td>
+<td>Complete core flows by keyboard with visible focus, labels, skip link, pressed pin state, polite results, descriptive titles, and appropriate heading focus after navigation. Check Services remains recognizable as the current section on detail, including for assistive technology. Include delayed data, Retry, and unknown-ID recovery; confirm the final visible heading receives focus where navigation requires it.</td>
+<td>2–3 hours</td>
+</tr>
+<tr>
+<td>T15</td>
+<td><code>style.css</code>, all screens</td>
+<td>At 390 px and 1440 px there is no horizontal page scrolling; filters/cards stack appropriately; controls meet the specified 44 px height; measured text/background pairs meet 4.5:1. Record any exceptions and fixes.</td>
+<td>2 hours</td>
+</tr>
+<tr>
+<td>T16</td>
+<td>Temporary 70-service fixture and filter view</td>
+<td>Record browser/device and input-to-visible-results timing for at least ten representative changes after data loads. Report median and maximum; every sampled change should be under 200 ms. Keep the fixture fictional and separate from the eight-row published demo.</td>
+<td>1 hour</td>
+</tr>
+<tr>
+<td>T17</td>
+<td>Published/local app and external libraries</td>
+<td>Record browser, network conditions, disabled/warm cache, and navigation-to-usable-catalog time for three cold-cache runs on normal broadband. Report each run against the three-second target; a failure is logged, not relabeled as a filter-performance pass.</td>
+<td>1 hour</td>
+</tr>
+<tr>
+<td>T18</td>
+<td><a href="research-notes.md">Research protocol</a>, new evaluation notes</td>
+<td>Prepare identical tasks, neutral instructions, timing/help/comprehension fields, and privacy-conscious participant labels. Two first-time testers are scheduled before T19 begins.</td>
+<td>1 hour plus scheduling</td>
+</tr>
+<tr>
+<td>T19</td>
+<td>Prototype and evaluation notes</td>
+<td>Record both testers' actual outcomes: owner/runbook within 30 seconds without help, retained filters, pin persistence, and explanations of schedule links/overdue warnings. Record failures honestly; collecting results does not itself mean SC-02/SC-07 pass.</td>
+<td>1–2 hours</td>
+</tr>
+<tr>
+<td>T20</td>
+<td>Evaluation notes, tasks, affected requirements</td>
+<td>Each finding is linked to a requirement with a decision to fix, revise scope, or document a limitation. Add separately estimated correction/retest rows before release; record human review.</td>
+<td>1 hour</td>
+</tr>
+<tr>
+<td>T21</td>
+<td>Repository, GitHub Pages, browser report</td>
+<td>Add any correction/retest IDs from T20 to this task's dependencies before work starts. Release only after those tasks pass and receive human review; publication completes; live Home, Services, detail refresh, About/sample links, plan, and tasks open correctly. Record URLs and the deployed revision.</td>
+<td>1 hour</td>
+</tr>
+</tbody>
+</table></div>
+<p>Estimated active effort for this proposed acceptance pass is <strong>24–31 hours</strong>, excluding participant scheduling delays and any correction work discovered. This is not a replacement for the business case's illustrative whole-project budget. T18 can begin after T1 while technical checks proceed; T19 still waits for both a usable prototype and available participants.</p>
+<h4 id="tasks-requirement-coverage">Requirement coverage</h4>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable document table"><table>
+<thead>
+<tr>
+<th>Specification requirement</th>
+<th>Tasks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FR-01: routes and recovery</td>
+<td>T10, T14, T21</td>
+</tr>
+<tr>
+<td>FR-02: Home and pins</td>
+<td>T11, T12</td>
+</tr>
+<tr>
+<td>FR-03: load, validate, retry, empty catalog</td>
+<td>T2, T3</td>
+</tr>
+<tr>
+<td>FR-04: alphabetical cards and optional images</td>
+<td>T6</td>
+</tr>
+<tr>
+<td>FR-05: combined filters</td>
+<td>T7</td>
+</tr>
+<tr>
+<td>FR-06: preserved/cleared filters</td>
+<td>T8</td>
+</tr>
+<tr>
+<td>FR-07: detail and destinations</td>
+<td>T4, T9</td>
+</tr>
+<tr>
+<td>FR-08: personal pins</td>
+<td>T11, T12</td>
+</tr>
+<tr>
+<td>FR-09: storage fallback</td>
+<td>T12</td>
+</tr>
+<tr>
+<td>FR-10: review dates</td>
+<td>T5, T9</td>
+</tr>
+<tr>
+<td>FR-11: About and fictional resources</td>
+<td>T4, T13</td>
+</tr>
+<tr>
+<td>FR-12: read-only correction process</td>
+<td>T13, T21</td>
+</tr>
+<tr>
+<td>NFR-01: accessibility</td>
+<td>T14</td>
+</tr>
+<tr>
+<td>NFR-02: responsive layout and contrast</td>
+<td>T15</td>
+</tr>
+<tr>
+<td>NFR-03: performance</td>
+<td>T16, T17</td>
+</tr>
+<tr>
+<td>NFR-04: safe text and URLs</td>
+<td>T4</td>
+</tr>
+<tr>
+<td>NFR-05: fictional data/publication boundary</td>
+<td>T2, T13, T21</td>
+</tr>
+<tr>
+<td>SC-01–SC-07: technical checks and actual user outcomes</td>
+<td>T3, T5, T7–T12, T14–T15, T18–T20</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="tasks-definition-of-done-applies-to-every-task">Definition of Done (applies to every task)</h3>
+<ul>
+<li>Matches its linked requirement's acceptance criteria in the specification.</li>
+<li>Reviewed by a human before marked done</li>
+<li>No task marked done without a test passing</li>
+</ul>
+<p>For a documentation or evaluation task, the check is inspection of the required output against its pass condition. AI review is assistance, not the human review required above. No implementation task is marked Done merely because code exists or an earlier AI-run check passed.</p>
+<h3 id="tasks-blocked-questions">Blocked / Questions</h3>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable document table"><table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Blocker</th>
+<th>Raised</th>
+<th>Resolved</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Proposed backlog</td>
+<td>Plan sign-off is pending. This is a draft for review, not an approved execution schedule.</td>
+<td>2026-09-21</td>
+<td>Pending Ryan's review.</td>
+</tr>
+<tr>
+<td>T19</td>
+<td>Two real first-time participants have not been identified. Simulated feedback cannot supply the SC-02/SC-07 evidence.</td>
+<td>2026-09-21</td>
+<td>Pending recruitment through T18.</td>
+</tr>
+<tr>
+<td>T20–T21</td>
+<td>The size of corrective work depends on evaluation findings. Do not assume a one-hour review task includes implementing every fix.</td>
+<td>2026-09-21</td>
+<td>Add traced correction/retest rows after T19, if needed.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Any future operational release additionally needs protected hosting, a designated steward, owner-attested records, and sponsor acceptance of the review policy. Those are outside this front-end backlog and are described in the plan rather than treated as completed classroom tasks.</p>
+</article><article id="reflection"><p class="source-link"><a href="week-4-reflection.md">Download original Markdown</a> · <a href="https://github.com/ryroiu/business_case/blob/main/docs/design/week-4-reflection.md">View source on GitHub</a></p><h2 id="reflection-week-4-reflection-signpost-plan-and-tasks">Week 4 reflection — Signpost plan and tasks</h2>
+<p><strong>Draft for Ryan's review and personalization before submission.</strong> This text describes the recorded AI-assisted planning process; it does not claim that human sign-off or user testing occurred.</p>
+<h3 id="reflection-what-went-well">What went well?</h3>
+<p>The existing specification gave this assignment a clear starting point. Its requirement IDs made it possible to connect each planning decision and task to a specific purpose. Keeping Signpost focused on finding services, ownership, and supporting information also made technology choices straightforward: the existing Vue application, CSV data, and browser-based pins already fit the idea. AI assistance was most useful for organizing these decisions into the course templates and identifying where the task list needed more precise completion checks. Reviewing the current repository helped the documents reflect the prototype that actually exists.</p>
+<h3 id="reflection-what-did-not-go-well">What did not go well?</h3>
+<p>The project had already moved into implementation during the earlier prototype assignment, so this was not a clean specification-to-plan-to-tasks sequence. A generic task list could easily have asked for features that were already built. The first drafts also needed refinement: review-date tests were too broad, participant scheduling came too late, and the release task needed an explicit dependency on any fixes discovered during evaluation. Another challenge was keeping evidence separate from assumptions. Earlier browser checks and fictional interview responses cannot establish that real users will find a runbook within 30 seconds. Human approval and real-user outcomes therefore remain pending instead of being presented as completed work.</p>
+<h3 id="reflection-how-might-i-approach-this-type-of-work-in-the-future">How might I approach this type of work in the future?</h3>
+<p>I would begin with a short inventory of existing features and open questions, then review the plan before developing the task list. I would give AI a specific brief containing the specification, current code, course guide, and boundaries of the assignment. I would ask for small tasks with clear dependencies and observable results, review each one, and make direct edits where the draft is vague or inconsistent. I would also arrange participants earlier and keep implementation checks separate from usability findings. Saving the prompts and initial drafts would make it easier to explain what changed and why. Before submission, I would personalize the reflection, record my own approval, and verify that the published document links open correctly.</p>
+<h3 id="reflection-document-links">Document links</h3>
+<ul>
+<li><a href="https://ryroiu.github.io/business_case/docs/design/plan.md">Plan — Signpost</a></li>
+<li><a href="https://ryroiu.github.io/business_case/docs/design/tasks.md">Tasks — Signpost</a></li>
+</ul>
+</article></div><footer>Readable copies of the Markdown deliverables. The original .md files remain available at the required assignment URLs. This page has no scripts or external dependencies.</footer></main></body></html>

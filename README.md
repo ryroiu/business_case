@@ -4,6 +4,7 @@ Signpost is a fictional service catalog for Alder Systems, continuing the [busin
 
 ## Design and submission
 
+- [Read Week 4 plan, tasks, and reflection in your browser](docs/design/week-4.html)
 - [Week 4 implementation plan](docs/design/plan.md)
 - [Week 4 task list and acceptance checks](docs/design/tasks.md)
 - [Week 4 reflection draft and submission links](docs/design/week-4-reflection.md)
