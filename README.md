@@ -4,6 +4,13 @@ Signpost is a fictional service catalog for Alder Systems, continuing the [busin
 
 ## Design and submission
 
+- [Week 4 implementation plan](docs/design/plan.md)
+- [Week 4 task list and acceptance checks](docs/design/tasks.md)
+- [Week 4 reflection draft and submission links](docs/design/week-4-reflection.md)
+- [Week 4 document evaluation and revisions](docs/design/planning-review.md)
+- [Week 4 publication verification](docs/design/week-4-publication.md)
+- [Week 4 course guides and templates](docs/design/reference/README.md)
+- [Planning briefs and archived first drafts](docs/prompt-scratch-pad/README.md)
 - [Revised specification, v0.2](docs/design/specification.md)
 - [Initial specification, v0.1](docs/design/specification-v0.1.md)
 - [Original course template](docs/design/specification-template.md)
@@ -14,6 +21,8 @@ Signpost is a fictional service catalog for Alder Systems, continuing the [busin
 - [Browser verification](docs/design/browser-checks.md)
 
 The company, service data, interview responses, and participant observations are fictional. The report clearly distinguishes those simulations from real documentation research and browser checks.
+
+The Week 4 documents build on the existing prototype and preserve the course templates. The task list describes the next acceptance/refinement phase; pending tasks do not mean those features are absent. Ryan's personal review, plan approval, and reflection edits remain author steps. The older specification submission and PDF are retained as the prior assignment.
 
 ## Preview and evaluate
 
