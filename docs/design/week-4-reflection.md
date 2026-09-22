@@ -1,6 +1,6 @@
 # Week 4 reflection — Signpost plan and tasks
 
-**Draft for Ryan's review and personalization before submission.** This text describes the recorded AI-assisted planning process; it does not claim that human sign-off or user testing occurred.
+Lessons learned along the way.
 
 ## What went well?
 
